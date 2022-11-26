@@ -1,0 +1,70 @@
+#include<iostream>
+#define INF 999
+using namespace std;
+int main()
+{
+	int vertexSize;
+	cout << "Enter the number of vertex size: ";
+	cin >> vertexSize;
+	int** vertex = new int* [vertexSize];
+	int* minOfRows = new int[vertexSize];
+	for (int i = 0; i < vertexSize; i++)
+		vertex[i] = new int[vertexSize];
+	for (int i = 0; i < vertexSize; i++)
+	{
+		cout << "Rows " << i + 1 << ":\n";
+		for (int j = 0; j < vertexSize; j++)
+		{
+			if (i == j)
+			{
+				vertex[i][j] = INF;
+				continue;
+			}
+			cout << "Value " << j + 1 << ":";
+			cin >> vertex[i][j];
+		}
+	}
+	int rowsSum = 0;
+	int minValueOfRows = vertex[0][0];
+	for (int i = 0; i < vertexSize; i++)
+	{
+		for (int j = 0; j < vertexSize; j++)
+		{
+			if (vertex[i][j] < minValueOfRows)
+				minValueOfRows = vertex[i][j];
+		}
+		rowsSum += minValueOfRows;
+		minOfRows[i] = minValueOfRows;
+		minValueOfRows = INF;
+	}
+	for (int i = 0; i < vertexSize; i++)
+		for (int j = 0; j < vertexSize; j++)
+			vertex[i][j] -= minOfRows[i];
+	int roadSum = 0;
+	int firstCounter = 0;
+	int secondCounter = 0;
+	int length = pow(vertexSize, 2) - vertexSize;
+	minValueOfRows = vertex[0][0];
+	for (int i = 0; i < length; i++)
+	{
+		if (vertex[firstCounter][secondCounter] < minValueOfRows)
+			minValueOfRows = vertex[firstCounter][secondCounter];
+		if (firstCounter == vertexSize-1)
+		{
+			firstCounter = 0;
+			secondCounter++;
+			roadSum += minValueOfRows;
+			minValueOfRows = vertex[firstCounter][secondCounter];
+		}
+		firstCounter++;
+	}
+	int result = rowsSum + roadSum;
+	cout << "\nMinimum rows sum = " << rowsSum << endl;
+	cout << "Minimum road sum = " << roadSum << endl;
+	cout << "Minumum value = " << result << endl;
+	for (int i = 0; i < vertexSize; i++)
+		delete[] vertex[i];
+	delete[] vertex;
+	delete[] minOfRows;
+	return 0;
+}
